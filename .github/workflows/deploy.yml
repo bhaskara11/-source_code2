@@ -1,0 +1,55 @@
+name: DEPLOY
+on:
+  workflow_dispatch:
+    inputs:
+      Environment:
+        description: 'Choose Environment to Deploy [dev, poc, qal, pte, stg, prd].'
+        required: true
+        default: 'dev'
+
+# Triggers the workflow on push or pull request events but only for the main branch
+#  push:
+#    branches: [feature/**]
+#  pull_request:
+#    branches: [feature/**]
+
+env:
+  GCS_SA_KEY: ${{ secrets.GCS_SA_KEY }}
+
+jobs:
+  docit:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout Code
+        uses: actions/checkout@master
+
+      - name: Import environment variables
+        id: import-env
+        shell: bash
+        run: |
+          mkdir tmp
+          cat envvars/global.env envvars/${{ github.event.inputs.Environment }}.env | grep -v "^#" | sed '/^[[:space:]]*$/d'> tmp/.env
+          while read line; do
+            echo "$line" >> $GITHUB_ENV
+          done < tmp/.env
+
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          service_account_key: "${{env.GCS_SA_KEY}}"
+          project_id: "${{env.projectId}}"
+          export_default_credentials: true
+
+      - name: Copy Application Objects
+        run: |-
+           echo $PWD
+           gsutil cp $GITHUB_WORKSPACE/src/common_spark_job.py ${sparkJobBucketUri}
+           gsutil cp $GITHUB_WORKSPACE/src/common_composer_dag.py ${composerDagBucketUri}
+
+      - name: Create Cloud Function
+        run: |-
+           cd $GITHUB_WORKSPACE/src/minerva_trigger_function/
+           gcloud functions deploy dataload-function-minerva --entry-point trigger_dag --env-vars-file ../../envvars/${{ github.event.inputs.Environment }}_cf_env_vars.yaml --runtime python37 --trigger-topic ${minervaTriggerTopic} 
+           cd $GITHUB_WORKSPACE/src/client_trigger_function/
+           gcloud functions deploy dataload-function-client --entry-point trigger_dag --env-vars-file ../../envvars/${{ github.event.inputs.Environment }}_cf_env_vars.yaml --runtime python37 --trigger-topic ${clientTriggerTopic} 
