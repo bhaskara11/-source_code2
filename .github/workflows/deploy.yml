@@ -47,6 +47,11 @@ jobs:
            gsutil cp $GITHUB_WORKSPACE/src/common_spark_job.py ${sparkJobBucketUri}
            gsutil cp $GITHUB_WORKSPACE/src/common_composer_dag.py ${composerDagBucketUri}
 
+      - name: Create Composer Variables
+        run: |-
+           gcloud composer environments storage data import --source=$GITHUB_WORKSPACE/envvars/${{ github.event.inputs.Environment }}_dag_vars.json --environment=${composerClusterName} --location=${composerClusterLocation}
+           gcloud composer environments run ${composerClusterName} --location ${composerClusterLocation} variables import -- /home/airflow/gcs/data/${{ github.event.inputs.Environment }}_dag_vars.json
+
       - name: Create Cloud Function
         run: |-
            cd $GITHUB_WORKSPACE/src/minerva_trigger_function/
