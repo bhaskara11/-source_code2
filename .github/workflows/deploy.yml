@@ -51,10 +51,3 @@ jobs:
         run: |-
            gcloud composer environments storage data import --source=$GITHUB_WORKSPACE/envvars/${{ github.event.inputs.Environment }}_dag_vars.json --environment=${composerClusterName} --location=${composerClusterLocation}
            gcloud composer environments run ${composerClusterName} --location ${composerClusterLocation} variables -- --i /home/airflow/gcs/data/${{ github.event.inputs.Environment }}_dag_vars.json
-
-      - name: Create Cloud Function
-        run: |-
-           cd $GITHUB_WORKSPACE/src/minerva_trigger_function/
-           gcloud functions deploy dataload-function-minerva --entry-point trigger_dag --env-vars-file ../../envvars/${{ github.event.inputs.Environment }}_cf_env_vars.yaml --runtime python37 --trigger-topic ${minervaTriggerTopic} 
-           cd $GITHUB_WORKSPACE/src/client_trigger_function/
-           gcloud functions deploy dataload-function-client --entry-point trigger_dag --env-vars-file ../../envvars/${{ github.event.inputs.Environment }}_cf_env_vars.yaml --runtime python37 --trigger-topic ${clientTriggerTopic} 
