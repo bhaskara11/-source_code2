@@ -50,7 +50,7 @@ jobs:
       - name: Create Composer Variables
         run: |-
            gcloud composer environments storage data import --source=$GITHUB_WORKSPACE/envvars/${{ github.event.inputs.Environment }}_dag_vars.json --environment=${composerClusterName} --location=${composerClusterLocation}
-           gcloud composer environments run ${composerClusterName} --location ${composerClusterLocation} variables import -- /home/airflow/gcs/data/${{ github.event.inputs.Environment }}_dag_vars.json
+           gcloud composer environments run ${composerClusterName} --location ${composerClusterLocation} variables -- --i /home/airflow/gcs/data/${{ github.event.inputs.Environment }}_dag_vars.json
 
       - name: Create Cloud Function
         run: |-
