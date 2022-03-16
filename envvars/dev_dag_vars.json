@@ -1,11 +1,11 @@
 {
   "common_dag_variables": {
-    "GCP_PROJECT": "ncr-0451-001-dev\n",
+    "GCP_PROJECT": "ncr-0451-001-dev",
     "GCE_REGION": "us-central1",
     "CLUSTER_NAME": "composer-cluster-d",
-    "MASTER_NUM_INSTANCES": "1",
+    "MASTER_NUM_INSTANCES": 1,
     "MASTER_MACHINE_TYPE_URI": "n1-standard-2",
-    "WORKER_NUM_INSTANCES": "2",
+    "WORKER_NUM_INSTANCES": 2,
     "WORKER_MACHINE_TYPE_URI": "n1-standard-2",
     "SPARK_JOB_FILE": "common_spark_job.py",
     "DAG_ID": "midas-data-pipeline",
