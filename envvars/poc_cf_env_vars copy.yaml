@@ -1,0 +1,4 @@
+{
+  "AIRFLOW_URI" : "https://ce31fed2476e4c848d42c1a5bed719a7-dot-us-central1.composer.googleusercontent.com",
+  "DAG_ID": "midas-data-pipeline"
+}

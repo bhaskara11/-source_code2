@@ -1,0 +1,16 @@
+{
+  "common_dag_variables": {
+    "GCP_PROJECT": "ncr-0451-001-dev\n",
+    "GCE_REGION": "us-central1",
+    "CLUSTER_NAME": "composer-cluster-d",
+    "MASTER_NUM_INSTANCES": "1",
+    "MASTER_MACHINE_TYPE_URI": "n1-standard-2",
+    "WORKER_NUM_INSTANCES": "2",
+    "WORKER_MACHINE_TYPE_URI": "n1-standard-2",
+    "SPARK_JOB_FILE": "common_spark_job.py",
+    "DAG_ID": "midas-data-pipeline",
+    "OUTPUT_BUCKET_PREFIX": "gs://ncr-0451-001-dev-us-dataproc-output-",
+    "GCS_CODE": "gs://ncr-0451-001-dev-us-pyspark-jobs",
+    "SUBNETWORK_URI": "https://www.googleapis.com/compute/v1/projects/dbk-dataplatform-allegacy-dev/regions/us-west2/subnetworks/uswest2-subnet1"
+  }
+}
